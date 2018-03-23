@@ -50,6 +50,17 @@ type (
 		Token token.Token
 		Value string
 	}
+
+	IntegerLiteral struct {
+		Token token.Token
+		Value int64
+	}
+
+	PrefixExpression struct {
+		Token    token.Token // The prefix token, e.g. !
+		Operator string
+		Right    Expression
+	}
 )
 
 func (p *Program) TokenLiteral() string {
@@ -119,3 +130,20 @@ func (es *ExpressionStatement) String() string {
 func (i *Identifier) expressionNode()      {}
 func (i *Identifier) TokenLiteral() string { return i.Token.Literal }
 func (i *Identifier) String() string       { return i.Value }
+
+func (i *IntegerLiteral) expressionNode()      {}
+func (i *IntegerLiteral) TokenLiteral() string { return i.Token.Literal }
+func (i *IntegerLiteral) String() string       { return i.Token.Literal }
+
+func (pe *PrefixExpression) expressionNode()      {}
+func (pe *PrefixExpression) TokenLiteral() string { return pe.Token.Literal }
+func (pe *PrefixExpression) String() string {
+	var out bytes.Buffer
+
+	out.WriteString("(")
+	out.WriteString(pe.Operator)
+	out.WriteString(pe.Right.String())
+	out.WriteString(")")
+
+	return out.String()
+}
