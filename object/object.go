@@ -4,6 +4,7 @@ import "fmt"
 
 const (
 	RETURN_VALUE_OBJ = "RETURN_VALUE"
+	ERROR_OBJ        = "ERROR"
 	INTEGER_OBJ      = "INTEGER"
 	BOOLEAN_OBJ      = "BOOLEAN"
 	NULL_OBJ         = "NULL"
@@ -19,6 +20,10 @@ type (
 
 	ReturnValue struct {
 		Value Object
+	}
+
+	Error struct {
+		Message string
 	}
 
 	Integer struct {
@@ -44,3 +49,7 @@ func (b *Boolean) Inspect() string  { return fmt.Sprintf("%t", b.Value) }
 
 func (n *Null) Type() ObjectType { return NULL_OBJ }
 func (n *Null) Inspect() string  { return "null" }
+
+// if you got line, column, etc. information from the lexer, you could add stack trace to error
+func (e *Error) Type() ObjectType { return ERROR_OBJ }
+func (e *Error) Inspect() string  { return "ERROR: " + e.Message }
