@@ -16,6 +16,7 @@ const (
 	BOOLEAN_OBJ      = "BOOLEAN"
 	STRING_OBJ       = "STRING"
 	NULL_OBJ         = "NULL"
+	BUILTIN_OBJ      = "BUILTIN"
 )
 
 type (
@@ -54,6 +55,12 @@ type (
 
 	Null struct {
 	}
+
+	BuiltinFunction func(args ...Object) Object
+
+	Builtin struct {
+		Fn BuiltinFunction
+	}
 )
 
 func (f *Function) Type() ObjectType { return FUNCTION_OBJ }
@@ -89,6 +96,9 @@ func (s *String) Inspect() string  { return s.Value }
 
 func (n *Null) Type() ObjectType { return NULL_OBJ }
 func (n *Null) Inspect() string  { return "null" }
+
+func (b *Builtin) Type() ObjectType { return BUILTIN_OBJ }
+func (b *Builtin) Inspect() string  { return "builtin function" }
 
 // if you got line, column, etc. information from the lexer, you could add stack trace to error
 func (e *Error) Type() ObjectType { return ERROR_OBJ }
