@@ -17,6 +17,7 @@ const (
 	STRING_OBJ       = "STRING"
 	NULL_OBJ         = "NULL"
 	BUILTIN_OBJ      = "BUILTIN"
+	ARRAY_OBJ        = "ARRAY"
 )
 
 type (
@@ -51,6 +52,10 @@ type (
 
 	String struct {
 		Value string
+	}
+
+	Array struct {
+		Elements []Object
 	}
 
 	Null struct {
@@ -103,3 +108,19 @@ func (b *Builtin) Inspect() string  { return "builtin function" }
 // if you got line, column, etc. information from the lexer, you could add stack trace to error
 func (e *Error) Type() ObjectType { return ERROR_OBJ }
 func (e *Error) Inspect() string  { return "ERROR: " + e.Message }
+
+func (ao *Array) Type() ObjectType { return ARRAY_OBJ }
+func (ao *Array) Inspect() string {
+	var out bytes.Buffer
+
+	elements := []string{}
+	for _, e := range ao.Elements {
+		elements = append(elements, e.Inspect())
+	}
+
+	out.WriteString("[")
+	out.WriteString(strings.Join(elements, ", "))
+	out.WriteString("]")
+
+	return out.String()
+}
